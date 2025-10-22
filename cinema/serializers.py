@@ -83,7 +83,7 @@ class MovieSessionListSerializer(MovieSessionSerializer):
 
     def get_tickets_available(self, obj):
         total_capacity = obj.cinema_hall.capacity
-        sold_tickets = obj.ticket_set.count()
+        sold_tickets = obj.tickets.count()
         return total_capacity - sold_tickets
 
 
@@ -102,7 +102,7 @@ class MovieSessionDetailSerializer(MovieSessionSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    movie_session = MovieSessionDetailSerializer(read_only=True)
+    movie_session = MovieSessionListSerializer(read_only=True)
 
     class Meta:
         model = Ticket
@@ -116,7 +116,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketCreateSerializer(many=True, read_only=True)
+    tickets = TicketCreateSerializer(many=True)
 
     class Meta:
         model = Order

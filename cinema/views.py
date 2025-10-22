@@ -1,3 +1,4 @@
+from django.utils.dateparse import parse_date
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
@@ -12,7 +13,9 @@ from cinema.serializers import (
     MovieSessionListSerializer,
     MovieDetailSerializer,
     MovieSessionDetailSerializer,
-    MovieListSerializer, OrderSerializer, OrderListSerializer,
+    MovieListSerializer,
+    OrderSerializer,
+    OrderListSerializer,
 )
 
 
@@ -72,11 +75,11 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        show_time = self.request.query_params.get("show_time")
+        date = self.request.query_params.get("date")
         movie = self.request.query_params.get("movie")
 
-        if show_time:
-            queryset = queryset.filter(show_time=show_time)
+        if date:
+            queryset = queryset.filter(show_time__date=parse_date)
 
         if movie:
             movie_id = [int(str_id) for str_id in movie.split(",")]
